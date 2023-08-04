@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ios ua regexp Demo</title>
+  <style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        width: 160px;
+        margin: 10px;
+    }
+  </style>
+  <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+  <script>var vConsole = new VConsole();</script>
+</head>
+<body>
+    <button id='getBrowserName'>getBrowserName result</button>
+    <button id='all'>all regexps check</button>
+    <button id='check1'>?&lt;! check</button>
+    <button id='check2'>?! check</button>
+
+    <button id="clear">clear result</button>
+    <div id="result"></div>
+</body>
+
+<script>
+    const AppBrowserRegexps = [
+        {
+            browser: 'WhatsApp',
+            type: 'mobile app',
+            regexps: ['WhatsApp(?:[ /]([d.]+))?'],
+        },
+        {
+            browser: 'Facebook Messenger',
+            type: 'mobile app',
+            regexps: ['(?:MessengerForiOS|MESSENGER|FB_IAB/Orca-Android).(?:FBAV)(?:[ /]([d.]+))?'],
+        },
+        {
+            browser: 'Facebook Messenger Lite',
+            type: 'mobile app',
+            regexps: ['(?:mLite|MessengerLite(?:ForiOS)?).(?:FBAV)(?:[ /]([d.]+))?'],
+        },
+        {
+            browser: 'Facebook Lite',
+            type: 'mobile app',
+            regexps: ['FBAN/EMA.+FBAV(?:[ /]([d.]+))?'],
+        },
+        {
+            browser: 'Facebook',
+            type: 'mobile app',
+            regexps: ['(?:FBAV|com.facebook.katana)(?:[ /]([d.]+))?', '(?:FBAN|FBSV|FBID|FBBV)/'],
+        },
+        {
+            browser: 'Line',
+            type: 'mobile app',
+            regexps: ['Line(?:[ /]([d.]+))'],
+        },
+        {
+            browser: 'Snapchat',
+            type: 'mobile app',
+            regexps: ['(?:Safari/[d.]+)?Snapchat/?([d.]+)', 'CronetSnapDevSheldon'],
+        },
+        {
+            browser: 'Viber',
+            type: 'mobile app',
+            regexps: ['Viber(?:/(d+[.d]+))?'],
+        },
+        {
+            browser: 'Instagram App',
+            type: 'mobile app',
+            regexps: ['Instagram[ /]([d.]+)?'],
+        },
+        {
+            browser: 'Vk',
+            type: 'mobile app',
+            referer: ['vk.com'],
+        },
+        {
+            browser: 'KakaoTalk',
+            type: 'mobile app',
+            regexps: ['KAKAOTALK (d+.(?:[.d]+))?'],
+        },
+        {
+            browser: 'Twitter',
+            type: 'mobile app',
+            regexps: ['Twitter for iPhone[/]?([d.]+)?', 'TwitterAndroid[/]?([d.]+)?', 'Twitter/([d.]+)'],
+            referer: ['t.co'],
+        },
+        {
+            browser: 'Zalo',
+            type: 'mobile app',
+            regexps: ['Zalo/([d.]+)|Zalo android'],
+        },
+        {
+            browser: 'Discord',
+            type: 'mobile app',
+            regexps: ['discord/([d.]+).+Electron', 'discord(?:-Updater)?/([d.]+)'],
+        },
+        {
+            browser: 'Google Search App',
+            type: 'mobile app',
+            regexps: ['(?:com.google.GoogleMobile|GSA|GoogleApp)/([d.]+)?'],
+        },
+    ];
+    const NormalBrowserRegexps = [
+        {
+            browser: 'Chrome Webview',
+            type: 'browser',
+            regexps: ['Version/.* Chrome(?:/(d+[.d]+))?'],
+        },
+        {
+            browser: 'Chrome Mobile',
+            type: 'browser',
+            regexps: ['CrMo(?:/(d+[.d]+))?', 'Chrome(?:/(d+[.d]+))? Mobile'],
+        },
+        {
+            browser: 'Chrome Mobile iOS',
+            type: 'browser',
+            regexps: ['CriOS(?:/(d+[.d]+))?'],
+        },
+        {
+            browser: 'Chrome',
+            type: 'browser',
+            regexps: ['Chrome(?!book)(?:/(d+[.d]+))?'],
+        },
+        {
+            browser: 'Mobile Safari',
+            type: 'browser',
+            regexps: [
+                '(?:(?:iPod|iPad|iPhone).+Version|MobileSafari)/(d+[.d]+)',
+                '(?:Version/(d+.[.d]+) .*)?Mobile.*Safari/',
+                '(?:iPod|(?<!Apple TV; U; CPU )iPhone|iPad)',
+            ],
+        },
+        {
+            browser: 'Safari',
+            type: 'browser',
+            regexps: ['Version/(d+.[.d]+) .*Safari/|(?:Safari|Safari(?:%20)?%E6%B5%8F%E8%A7%88%E5%99%A8)/?d+'],
+        },
+        {
+            browser: 'Samsung Browser',
+            type: 'browser',
+            regexps: ['Samsung ?Browser(?:[/ ](d+[.d]+))?'],
+        },
+        {
+            browser: 'HeyTapBrowser',
+            type: 'browser',
+            regexps: ['HeyTapBrowser/([d.]+)'],
+        },
+        {
+            browser: 'Yandex Browser Lite',
+            type: 'browser',
+            regexps: ['YaBrowser(?:/(d+[.d]*)) (lite)?'],
+        },
+        {
+            browser: 'Yandex Browser',
+            type: 'browser',
+            regexps: [
+                'YaBrowser(?:/(d+[.d]*)) YaApp_iOS',
+                'iP(?:hone|ad);.+YaBrowser(?:/(d+[.d]*)) Mobile',
+                'YaBrowser(?:/(d+[.d]*))(?: ((alpha|beta)))?',
+                'Ya(?:ndex)?SearchBrowser(?:/(d+[.d]*))',
+            ],
+        },
+        {
+            browser: 'vivo Browser',
+            type: 'browser',
+            regexps: ['VivoBrowser(?:/(d+[.d]+))?'],
+        },
+        {
+            browser: 'Opera Mobile',
+            type: 'browser',
+            regexps: ['(?:Opera Tablet.*Version|Opera/.+Opera Mobi.+Version|Mobile.+OPR)/(d+[.d]+)'],
+        },
+        {
+            browser: 'Opera Mobile',
+            type: 'browser',
+            regexps: ['Opera/(d+.[.d]+) .*Opera Mobi', 'OPT/(d+[.d]+)'],
+        },
+        {
+            browser: 'Firefox Mobile',
+            type: 'browser',
+            regexps: ['(?:Mobile|Tablet).*Servo.*Firefox(?:/(d+[.d]+))?', '(?:Mobile|Tablet).*Firefox(?:/(d+[.d]+))?'],
+        },
+        {
+            browser: 'Firefox Mobile iOS',
+            type: 'browser',
+            regexps: ['FxiOS/(d+[.d]+)'],
+        },
+        {
+            browser: 'Microsoft Edge',
+            type: 'browser',
+            regexps: ['(?<!motorola )Edge[ /](d+[.d]+)', 'EdgiOS[ /](d+[.d]+)', 'EdgA[ /](d+[.d]+)', 'Edg[ /](d+[.d]+)'],
+        },
+    ];
+    // 1. mobile app has higher priority than normal browser
+    // 2. front types have higher priority
+    const BrowserRegexps = [...AppBrowserRegexps, ...NormalBrowserRegexps];
+    const BrowserName = [...BrowserRegexps.map((i) => i.browser), 'Unknown'].reduce((obj, item) => {
+        obj[item] = item;
+        return obj;
+    }, // array to object
+    {});
+    function getBrowserName(userAgent, referer = '') {
+        for (const rules of BrowserRegexps) {
+            const { browser, regexps, referer: refererList } = rules;
+            if (regexps === null || regexps === void 0 ? void 0 : regexps.some((regex) => regex && userAgent.match(regex))) {
+                return browser;
+            }
+            if (refererList === null || refererList === void 0 ? void 0 : refererList.some((r) => r === null || r === void 0 ? void 0 : r.includes(referer))) {
+                return browser;
+            }
+        }
+        return BrowserName.Unknown;
+    }
+
+    // actions
+    document.querySelector("#clear").addEventListener('click', () => {
+        document.querySelector("#result").innerHTML = '';
+    });
+    document.querySelector("#getBrowserName").addEventListener('click', () => {
+        try{
+            document.querySelector("#result").innerHTML = getBrowserName(navigator.userAgent,document.referrer);
+        }catch(err){
+            console.warn('error', err);
+            document.querySelector("#result").innerHTML = err.message || err;
+        }
+    });
+    document.querySelector("#all").addEventListener('click', () => {
+        try{
+            for (const rules of BrowserRegexps) {
+                const { browser, regexps, referer: refererList } = rules;
+                let result = 'null';
+                if (regexps === null || regexps === void 0 ? void 0 : regexps.some((regex) => regex && navigator.userAgent.match(regex))) {
+                    result =  browser;
+                }
+                if (refererList === null || refererList === void 0 ? void 0 : refererList.some((r) => r === null || r === void 0 ? void 0 : r.includes(document.referrer))) {
+                    result =  browser;
+                }
+                console.log('match '+browser+': '+result);
+            }
+            document.querySelector("#result").innerHTML = 'all pass';
+        }catch(err){
+            console.warn('error', err);
+            document.querySelector("#result").innerHTML = err.message || err;
+        }
+    });
+    document.querySelector("#check1").addEventListener('click', () => {
+        try{
+            const regexp = "(?:iPod|(?<!Apple TV; U; CPU )iPhone|iPad)";
+            const hit = navigator.userAgent.match(regexp);
+            document.querySelector("#result").innerHTML = 'check 【 '+ regexp.replace('<','&lt;') +' 】 match:' + hit;
+        }catch(err){
+            console.warn('error', err);
+            document.querySelector("#result").innerHTML = err.message || err;
+        }
+    });
+    document.querySelector("#check2").addEventListener('click', () => {
+        try{
+            const regexp = "'Chrome(?!book)(?:/(d+[.d]+))?'";
+            const hit = navigator.userAgent.match(regexp);
+            document.querySelector("#result").innerHTML = 'check 【 '+ regexp.replace('<','&lt;') +' 】 match:' + hit;
+        }catch(err){
+            console.warn('error', err);
+            document.querySelector("#result").innerHTML = err.message || err;
+        }
+    });
+</script>
+</html>
