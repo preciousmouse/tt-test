@@ -71,6 +71,7 @@
     <button id="Mul-auto">M universal link - autoclick</button>
     <button id="Mo-auto">M onelink - autoclick</button>
     <button id="normal-jump">scheme 1180 + scheme 1340 + onelink 1180 with af-dp</button>
+    <button id="MoG-auto">M onelink - autoclick</button>
     <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
     <script>
         // VConsole will be exported to `window.VConsole` by default.
@@ -133,6 +134,9 @@
         document.querySelector("#Mo-auto").addEventListener('click', () => {
             jump(`https://snssdk1233.onelink.me/bIdt?pid=channelshare&c=musical_7003009339082558726&af_adset_id=6825545888413352962_copy&click=0&action=openapp&_d=secCgYIASAHKAESPgo8QkAwG5eriN9YLHzZcEA4KH2UumFziDX82iBmzd0RnL+X6S+ORmVb70GKWGMRV2UnzEqlXIPzuyO6rKhjGgA=&wid=7058205421748995585&rid=46482694643426957138&vid=&vidab=70115112&lvid=&af_dp=snssdk1233://aweme/detail/7003009339082558726?refer=web&gd_label=click_wap_share_handle&page_name=reflow_video&params_url=https%3A%2F%2Fwww.tiktok.com%2F%40taylorswift%2Fvideo%2F7003009339082558726%3F_d%3DsecCgYIASAHKAESPgo8QkAwG5eriN9YLHzZcEA4KH2UumFziDX82iBmzd0RnL%252BX6S%252BORmVb70GKWGMRV2UnzEqlXIPzuyO6rKhjGgA%253D%26checksum%3Dd66f30fa28d19021b6ad00b157a56c6a421ad6a47be524b3f58d9bc9bbc02afa%26language%3Den%26preview_pb%3D0%26sec_user_id%3DMS4wLjABAAAA2-Qg8FKZS-ma5xU8bUMYGxp1svGOYHTroIXZlSQ7xDHDer9QbXBELMJ9e-uIvExa%26share_app_id%3D1233%26share_item_id%3D7003009339082558726%26share_link_id%3D30D05716-0FD0-4673-BDC3-9EA43567422A%26source%3Dh5_m%26timestamp%3D1630997272%26tt_from%3Dcopy%26u_code%3Ddcadh5ahhk59dj%26user_id%3D6825545888413352962%26utm_campaign%3Dclient_share%26utm_medium%3Dios%26utm_source%3Dcopy%26_r%3D1%26click_item_id%3D7003009339082558726%26rid%3D46482694643426957138%26target%3Dshare_handle%26vidab%3D70115112%26wid%3D7058205421748995585&needlaunchlog=1&jump_time=1643426959787`);
         })
+        document.querySelector("#MoG-auto").addEventListener('click', () => {
+            jump(`https://snssdk1233.onelink.me/bIdt?pid=channelshare&c=musical_7003009339082558726&af_adset_id=6825545888413352962_copy&click=0&action=openapp&_d=secCgYIASAHKAESPgo8QkAwG5eriN9YLHzZcEA4KH2UumFziDX82iBmzd0RnL+X6S+ORmVb70GKWGMRV2UnzEqlXIPzuyO6rKhjGgA=&wid=7058205421748995585&rid=46482694643426957138&vid=&vidab=70115112&lvid=&af_dp=snssdk1233://aweme/detail/7003009339082558726?refer=web&gd_label=click_wap_share_handle&page_name=reflow_video&params_url=https%3A%2F%2Fwww.tiktok.com%2F%40taylorswift%2Fvideo%2F7003009339082558726%3F_d%3DsecCgYIASAHKAESPgo8QkAwG5eriN9YLHzZcEA4KH2UumFziDX82iBmzd0RnL%252BX6S%252BORmVb70GKWGMRV2UnzEqlXIPzuyO6rKhjGgA%253D%26checksum%3Dd66f30fa28d19021b6ad00b157a56c6a421ad6a47be524b3f58d9bc9bbc02afa%26language%3Den%26preview_pb%3D0%26sec_user_id%3DMS4wLjABAAAA2-Qg8FKZS-ma5xU8bUMYGxp1svGOYHTroIXZlSQ7xDHDer9QbXBELMJ9e-uIvExa%26share_app_id%3D1233%26share_item_id%3D7003009339082558726%26share_link_id%3D30D05716-0FD0-4673-BDC3-9EA43567422A%26source%3Dh5_m%26timestamp%3D1630997272%26tt_from%3Dcopy%26u_code%3Ddcadh5ahhk59dj%26user_id%3D6825545888413352962%26utm_campaign%3Dclient_share%26utm_medium%3Dios%26utm_source%3Dcopy%26_r%3D1%26click_item_id%3D7003009339082558726%26rid%3D46482694643426957138%26target%3Dshare_handle%26vidab%3D70115112%26wid%3D7058205421748995585&needlaunchlog=1&jump_time=1643426959787&af_android_store_csl=t`);
+        })
         
         function isDocumentHidden() {
             return Boolean(document.hidden || document.webkitHidden);
@@ -186,6 +190,7 @@
     <script>
         location.href.includes('mtlAutoclick=1') && document.querySelector("#Mul-auto").click();
         location.href.includes('moAutoclick=1') && document.querySelector("#Mo-auto").click();
+        location.href.includes('mogAutoclick=1') && document.querySelector("#MoG-auto").click();
     </script>
 </body>
 
