@@ -120,30 +120,33 @@
         }
 
         const buttonsConfig = [
-            {name: 'T scheme', link: T_scheme },
-            {name: 'M scheme', link: M_scheme },
-            {name: 'Lite scheme', link: Lite_scheme },
-            {name: 'Coin scheme', link: Coin_scheme },
+            {key: 't_scheme', name: 'T scheme', link: T_scheme },
+            {key: 'm_scheme', name: 'M scheme', link: M_scheme },
+            {key: 'lite_scheme', name: 'Lite scheme', link: Lite_scheme },
+            {key: 'coin_scheme', name: 'Coin scheme', link: Coin_scheme },
 
-            {name: 'T onelink', link: getOnelink({appType: 't'}) },
-            {name: 'M onelink', link: getOnelink({appType: 'm'}) },
-            {name: 'Lite onelink', link: getOnelink({appType: 'lite'}) },
+            {key: 't_onelink', name: 'T onelink', link: getOnelink({appType: 't'}) },
+            {key: 'm_onelink', name: 'M onelink', link: getOnelink({appType: 'm'}) },
+            {key: 'lite_onelink', name: 'Lite onelink', link: getOnelink({appType: 'lite'}) },
 
-            {name: 'T onelink without af_dp', link: getOnelink({appType: 't', remove_afdp: true}) },
-            {name: 'M onelink without af_dp', link: getOnelink({appType: 'm', remove_afdp: true}) },
-            {name: 'Lite onelink without af_dp', link: getOnelink({appType: 'lite', remove_afdp: true}) },
+            {key: 't_onelink_noafdp', name: 'T onelink without af_dp', link: getOnelink({appType: 't', remove_afdp: true}) },
+            {key: 'm_onelink_noafdp', name: 'M onelink without af_dp', link: getOnelink({appType: 'm', remove_afdp: true}) },
+            {key: 'lite_onelink_noafdp', name: 'Lite onelink without af_dp', link: getOnelink({appType: 'lite', remove_afdp: true}) },
 
-            {name: 'T onelink with af_android_store_csl', link: getOnelink({appType: 't', with_af_android_store_csl: true}) },
-            {name: 'M onelink with af_android_store_csl', link: getOnelink({appType: 'm', with_af_android_store_csl: true}) },
-            {name: 'Lite onelink with af_android_store_csl', link: getOnelink({appType: 'lite', with_af_android_store_csl: true}) },
+            {key: 't_onelink_afstorecsl', name: 'T onelink with af_android_store_csl', link: getOnelink({appType: 't', with_af_android_store_csl: true}) },
+            {key: 'm_onelink_afstorecsl', name: 'M onelink with af_android_store_csl', link: getOnelink({appType: 'm', with_af_android_store_csl: true}) },
+            {key: 'lite_onelink_afstorecsl', name: 'Lite onelink with af_android_store_csl', link: getOnelink({appType: 'lite', with_af_android_store_csl: true}) },
 
-            {name: 'T onelink with af_android_store_csl + without af_dp', link: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true}) },
-            {name: 'M onelink with af_android_store_csl + without af_dp', link: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true}) },
-            {name: 'Lite onelink with af_android_store_csl + without af_dp', link: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true}) },
+            {key: 't_onelink_noafdp_afstorecsl', name: 'T onelink with af_android_store_csl + without af_dp', 
+                link: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true}) },
+            {key: 'm_onelink_noafdp_afstorecsl', name: 'M onelink with af_android_store_csl + without af_dp', 
+                link: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true}) },
+            {key: 'lite_onelink_noafdp_afstorecsl', name: 'Lite onelink with af_android_store_csl + without af_dp', 
+                link: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true}) },
 
-            {name: 'T applink', key: 't_applink', link: getApplink({appType: 't'}) },
-            {name: 'M applink', key: 'm_applink', link: getApplink({appType: 'm'}) },
-            {name: 'Lite applink', link: getApplink({appType: 'lite'}) },
+            {key: 't_applink', name: 'T applink', link: getApplink({appType: 't'}) },
+            {key: 'm_applink', name: 'M applink', key: 'm_applink', link: getApplink({appType: 'm'}) },
+            {key: 'lite_applink', name: 'Lite applink', link: getApplink({appType: 'lite'}) },
         ];
 
 
