@@ -141,8 +141,8 @@
             {name: 'M onelink with af_android_store_csl + without af_dp', link: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true}) },
             {name: 'Lite onelink with af_android_store_csl + without af_dp', link: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true}) },
 
-            {name: 'T applink', link: getApplink({appType: 't'}) },
-            {name: 'M applink', link: getApplink({appType: 'm'}) },
+            {name: 'T applink', key: 't_applink', link: getApplink({appType: 't'}) },
+            {name: 'M applink', key: 'm_applink', link: getApplink({appType: 'm'}) },
             {name: 'Lite applink', link: getApplink({appType: 'lite'}) },
         ];
 
@@ -158,12 +158,17 @@
         }
         
         const bodyDom = document.querySelector('body');
-        for(const {name, link} of buttonsConfig){
+        for(const {key, name, link} of buttonsConfig){
           const btnDom = document.createElement('button');
-          btnDom.id = name;
+          btnDom.id = key ?? name;
           btnDom.innerHTML = name;
           btnDom.addEventListener('click', ()=>jump(link));
           bodyDom.appendChild(btnDom);
+        }
+
+        const autoClickKey = new URL(location.href).searchParams.get('autoClickKey');
+        if(autoClickKey){
+            document.querySelector(`#${autoClickKey}`)?.click?.();
         }
     </script>
 </body>
