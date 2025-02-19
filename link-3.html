@@ -147,6 +147,28 @@
             {key: 't_applink', name: 'T applink', link: getApplink({appType: 't'}) },
             {key: 'm_applink', name: 'M applink', key: 'm_applink', link: getApplink({appType: 'm'}) },
             {key: 'lite_applink', name: 'Lite applink', link: getApplink({appType: 'lite'}) },
+
+            {key: 'm_and_lite_scheme', name: 'M + Lite scheme', action: ()=>{
+                jump(M_scheme);
+                setTimeout(()=>{
+                    jump(Lite_scheme);
+                },50);
+            }},
+            {key: 't_and_lite_scheme', name: 'T + Lite scheme', action: ()=>{
+                jump(T_scheme);
+                setTimeout(()=>{
+                    jump(Lite_scheme);
+                },50);
+            }},
+            {key: 'm_and_lite_scheme_and_m_onelink', name: 'M + Lite scheme + M Onelink', action: ()=>{
+                jump(M_scheme);
+                setTimeout(()=>{
+                    jump(Lite_scheme);
+                    setTimeout(()=>{
+                        jump(getOnelink({appType: 'm'}));
+                    },50);
+                },50);
+            }},
         ];
 
 
@@ -161,11 +183,12 @@
         }
         
         const bodyDom = document.querySelector('body');
-        for(const {key, name, link} of buttonsConfig){
+        for(const {key, name, link, action} of buttonsConfig){
           const btnDom = document.createElement('button');
           btnDom.id = key ?? name;
           btnDom.innerHTML = name;
-          btnDom.addEventListener('click', ()=>jump(link));
+          const _action = action ?? (link && (()=>jump(link)));
+          btnDom.addEventListener('click', action);
           bodyDom.appendChild(btnDom);
         }
 
