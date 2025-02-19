@@ -188,13 +188,17 @@
           btnDom.id = key ?? name;
           btnDom.innerHTML = name;
           const _action = action ?? (link && (()=>jump(link)));
-          btnDom.addEventListener('click', action);
+          btnDom.addEventListener('click', _action);
           bodyDom.appendChild(btnDom);
         }
 
-        const autoClickKey = new URL(location.href).searchParams.get('autoClickKey');
+        const searchParams = new URL(location.href).searchParams;
+        const autoClickKey = searchParams.get('autoClickKey');
+        const autoClickDelay = Number(searchParams.get('autoClickDelay')) ?? 0;
         if(autoClickKey){
-            document.querySelector(`#${autoClickKey}`)?.click?.();
+            setTimeout(()=>{
+                document.querySelector(`#${autoClickKey}`)?.click?.();
+            }, autoClickDelay);
         }
     </script>
 </body>
