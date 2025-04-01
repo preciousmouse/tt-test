@@ -55,6 +55,9 @@
 </head>
 
 <body>
+    <textarea id="textarea" style="width:100%" placeholder="please input url"></textarea>
+    <button id="textarea-btn">open url from textarea</button>
+
     <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
     <script>
         // VConsole will be exported to `window.VConsole` by default.
@@ -181,6 +184,11 @@
                 location.href = url;
             }
         }
+
+        document.querySelector('#textarea-btn').addEventListener('click',()=>{
+            const textareaContent = document.querySelector('#textarea').value;
+            jump(textareaContent);
+        });
         
         const bodyDom = document.querySelector('body');
         for(const {key, name, link, action} of buttonsConfig){
