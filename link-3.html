@@ -151,6 +151,15 @@
             {key: 'm_applink', name: 'M applink', key: 'm_applink', link: getApplink({appType: 'm'}) },
             {key: 'lite_applink', name: 'Lite applink', link: getApplink({appType: 'lite'}) },
 
+            {key: 't_applink_afstorecsl', name: 'T applink with af_android_store_csl', link: getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 'm_applink_afstorecsl', name: 'M applink with af_android_store_csl', key: 'm_applink', link: getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 'lite_applink_afstorecsl', name: 'Lite applink with af_android_store_csl', link: getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, with_short: true })}) },
+
+            {key: 't_applink_noafdp_afstorecsl', name: 'T applink with af_android_store_csl + without af_dp', link: getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 'm_applink_noafdp_afstorecsl', name: 'M applink with af_android_store_csl + without af_dp', key: 'm_applink', link: getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 'lite_applink_noafdp_afstorecsl', name: 'Lite applink with af_android_store_csl + without af_dp', link: getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+
+
             {key: 'm_and_lite_scheme', name: 'M + Lite scheme', action: ()=>{
                 jump(M_scheme);
                 setTimeout(()=>{
