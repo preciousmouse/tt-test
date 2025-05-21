@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            width: 100%;
+            height: 30px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <textarea id="textarea" style="width:100%" placeholder="please input url"></textarea>
+    <button id="textarea-btn">open url from textarea</button>
+
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+    <script>
+        // VConsole will be exported to `window.VConsole` by default.
+        var vConsole = new window.VConsole();
+    </script>
+    <script>
+
+        const scheme_param_str = 'refer=web&gd_label=click_wap_login_popup&page_name=reflow_graphic&params_url=https%3A%2F%2Fwww.tiktok.com%2F%40puffo.il.gatto%2Fphoto%2F7374872651497573665%3F_r%3D1%26_t%3D8rbRC1WENSN%26lang%3Den%26mockRam%3D3%26target%3Dlogin_popup%26rid%3D20838449535029629590%26vidab%3D73229290%252C70508271%252C72783097%252C72923695%252C73125895%252C73153475%252C73167672%252C73205493%252C73234258%252C72891515%252C73004916%26click_item_id%3D7374872651497573665&_r=1&lang=en&mockRam=3&_d=secCgYIASAHKAESPgo8vDQEektRaYITfHjCQ6ucZed7J5yN%2Fh57NiHU3u6sjXHZxxA%2BpdFCtibnfn5P1MTjQDr6%2FSwsmDMz88psGgA%3D&checksum=3b275841ec98d1813d873dbf194a4c17e4461c74a246d9e78e351384fd45e4cc&link_reflow_popup_iteration_sharer=%7B%22follow_to_play_duration%22%3A-1%2C%22profile_clickable%22%3A1%2C%22dynamic_cover%22%3A1%2C%22click_empty_to_play%22%3A1%7D&preview_pb=0&sec_user_id=MS4wLjABAAAAhdt-6x8jd0kxuwws25v2wuHFkORK1NA6HKGl2UlZSPz-JABb-8JOkOlMeK8ZGsNB&share_app_id=1233&share_item_id=7415227144336411909&share_link_id=C2CBE046-C385-4CD9-86FB-04398D4DDA9A&sharer_language=zh&social_share_type=0&source=h5_m&timestamp=1732268469&tt_from=copy&u_code=e7357bfmi6i15a&ug_btm=b8727%2Cb2001&user_id=7212990523900888110&utm_campaign=client_share&utm_medium=ios&utm_source=copy&referer=pwa&wid=7451585720806884872&vidab=73229290%2C70508271%2C72783097%2C72923695%2C73125895%2C73153475%2C73167672%2C73205493%2C73234258%2C72891515%2C73004916&seo_vidab=&smartui_instance_id=7445217363210797057%2C7439152838858506256%2C7439151652231217168%2C7272209506837217281&release=1.0.0.6904&jump_time=1735032171743&is_sub_only_video=0&ug_source=&ug_campaign=&tt_ug_share_gp_flag=1';
+        const M_scheme = `snssdk1233://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const T_scheme = `snssdk1180://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const Lite_scheme = `snssdk1340://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const Coin_scheme = `snssdk473824://aweme/detail/7374872651497573665?${scheme_param_str}`;
+
+        const onelink_param_str = 'pid=tiktok_share&c=graphic_7374872651497573665&af_adset_id=7212990523900888110_copy&click=0&tap_target=login_popup&_d=secCgYIASAHKAESPgo8vDQEektRaYITfHjCQ6ucZed7J5yN%2Fh57NiHU3u6sjXHZxxA%2BpdFCtibnfn5P1MTjQDr6%2FSwsmDMz88psGgA%3D&embed_source=&ug_source=&ug_campaign=&wid=7451585720806884872&rid=20838449535029629590&vid=&vidab=73229290%2C70508271%2C72783097%2C72923695%2C73125895%2C73153475%2C73167672%2C73205493%2C73234258%2C72891515%2C73004916&seo_vidab=&smartui_instance_id=7445217363210797057%2C7439152838858506256%2C7439151652231217168%2C7272209506837217281&release=1.0.0.6904&lvid=&jump_time=1735032171743&af_adset=pwa&af_ad_id=no_referrer&tt_ug_share_gp_flag=1&af_dp=';
+        const M_onelink_template = `https://snssdk1233.onelink.me/bIdt?${onelink_param_str}`;
+        const T_onelink_template = `https://snssdk1180.onelink.me/BAuo?${onelink_param_str}`;
+        const Lite_onelink_template = `https://snssdk1340.onelink.me/k3Nj?${onelink_param_str}`;
+        function getOnelink({appType, customScheme, with_short, remove_afdp, with_af_android_store_csl}) {
+            const onelink_template = {
+                m: M_onelink_template,
+                t: T_onelink_template,
+                lite: Lite_onelink_template,
+            }[appType];
+            const fillScheme = customScheme ?? {
+                m: M_scheme,
+                t: T_scheme,
+                lite: Lite_scheme,
+            }[appType];
+
+            const onelink = new URL(onelink_template);
+            if(!with_short && onelink.searchParams.has('af_dp') && onelink.searchParams.get('af_dp') === ''){
+                onelink.searchParams.set('af_dp', fillScheme);
+            }
+            if(remove_afdp){
+                onelink.searchParams.delete('af_dp');
+            }
+            if(with_af_android_store_csl){
+                onelink.searchParams.set('af_android_store_csl', 't');
+            }
+            return onelink.toString();
+        }
+
+        const M_applink_template = 'https://app-va.tiktokv.com/redirect/?redirect_url=&short_dl=&decode_once=1';
+        const T_applink_template = 'https://www.tiktokv.com/redirect/?redirect_url=&short_dl=&decode_once=1';
+        const Lite_applink_template = 'https://www.tiktokv.com/redirect/?redirect_url=&short_dl=&decode_once=1';
+        function getApplink({appType, customOnelink, customScheme}){
+            const applink_template = {
+                m: M_applink_template,
+                t: T_applink_template,
+                lite: Lite_applink_template,
+            }[appType];
+            const fillScheme = customScheme ?? {
+                m: M_scheme,
+                t: T_scheme,
+                lite: Lite_scheme,
+            }[appType];
+            const fillOnelink = customOnelink ?? getOnelink({appType, with_short: true });
+
+            const applink = new URL(applink_template);
+            applink.searchParams.set('redirect_url', fillScheme);
+            applink.searchParams.set('short_dl', fillOnelink);
+            return applink.toString();
+        }
+
+        const Lite_mini_apk_link = 'https://sf16-va.tiktokcdn.com/obj/eden-va2/lapshyasbrvarpa_kpvykuh_jnb/ljhwZthlaukjlkulzlp/US/Lite/TikTok_Lite_360961.apk';
+
+        const buttonsConfig = [
+            {key: 't_scheme', name: 'T scheme', link: T_scheme },
+            {key: 'm_scheme', name: 'M scheme', link: M_scheme },
+            {key: 'lite_scheme', name: 'Lite scheme', link: Lite_scheme },
+            {key: 'coin_scheme', name: 'Coin scheme', link: Coin_scheme },
+
+            {key: 't_onelink', name: 'T onelink', link: getOnelink({appType: 't'}) },
+            {key: 'm_onelink', name: 'M onelink', link: getOnelink({appType: 'm'}) },
+            {key: 'lite_onelink', name: 'Lite onelink', link: getOnelink({appType: 'lite'}) },
+
+            {key: 't_onelink_noafdp', name: 'T onelink without af_dp', link: getOnelink({appType: 't', remove_afdp: true}) },
+            {key: 'm_onelink_noafdp', name: 'M onelink without af_dp', link: getOnelink({appType: 'm', remove_afdp: true}) },
+            {key: 'lite_onelink_noafdp', name: 'Lite onelink without af_dp', link: getOnelink({appType: 'lite', remove_afdp: true}) },
+
+            {key: 't_onelink_afstorecsl', name: 'T onelink with af_android_store_csl', link: getOnelink({appType: 't', with_af_android_store_csl: true}) },
+            {key: 'm_onelink_afstorecsl', name: 'M onelink with af_android_store_csl', link: getOnelink({appType: 'm', with_af_android_store_csl: true}) },
+            {key: 'lite_onelink_afstorecsl', name: 'Lite onelink with af_android_store_csl', link: getOnelink({appType: 'lite', with_af_android_store_csl: true}) },
+
+            {key: 't_onelink_noafdp_afstorecsl', name: 'T onelink with af_android_store_csl + without af_dp', 
+                link: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true}) },
+            {key: 'm_onelink_noafdp_afstorecsl', name: 'M onelink with af_android_store_csl + without af_dp', 
+                link: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true}) },
+            {key: 'lite_onelink_noafdp_afstorecsl', name: 'Lite onelink with af_android_store_csl + without af_dp', 
+                link: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true}) },
+
+            {key: 't_applink', name: 'T applink', link: getApplink({appType: 't'}) },
+            {key: 'm_applink', name: 'M applink', key: 'm_applink', link: getApplink({appType: 'm'}) },
+            {key: 'lite_applink', name: 'Lite applink', link: getApplink({appType: 'lite'}) },
+
+            {key: 't_applink_afstorecsl', name: 'T applink with af_android_store_csl', link: getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 'm_applink_afstorecsl', name: 'M applink with af_android_store_csl', key: 'm_applink', link: getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 'lite_applink_afstorecsl', name: 'Lite applink with af_android_store_csl', link: getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, with_short: true })}) },
+
+            {key: 't_applink_noafdp_afstorecsl', name: 'T applink with af_android_store_csl + without af_dp', link: getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 'm_applink_noafdp_afstorecsl', name: 'M applink with af_android_store_csl + without af_dp', key: 'm_applink', link: getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 'lite_applink_noafdp_afstorecsl', name: 'Lite applink with af_android_store_csl + without af_dp', link: getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+
+
+            {key: 'm_and_lite_scheme', name: 'M + Lite scheme', action: ()=>{
+                jump(M_scheme);
+                setTimeout(()=>{
+                    jump(Lite_scheme);
+                },50);
+            }},
+            {key: 't_and_lite_scheme', name: 'T + Lite scheme', action: ()=>{
+                jump(T_scheme);
+                setTimeout(()=>{
+                    jump(Lite_scheme);
+                },50);
+            }},
+            {key: 'm_and_lite_scheme_and_m_onelink', name: 'M + Lite scheme + M Onelink', action: ()=>{
+                jump(M_scheme);
+                setTimeout(()=>{
+                    jump(Lite_scheme);
+                    setTimeout(()=>{
+                        jump(getOnelink({appType: 'm'}));
+                    },50);
+                },50);
+            }},
+
+            {key: 'lite_mini_apk', name: 'Lite mini apk download', link: Lite_mini_apk_link },
+        ];
+
+
+        const jump = url=>{
+            const useWindowOpen = location.href.includes('useWindowOpen=1');
+            console.log('start jump', useWindowOpen, url);
+            if(useWindowOpen){
+                window.open(url);
+            }else{
+                location.href = url;
+            }
+        }
+
+        document.querySelector('#textarea-btn').addEventListener('click',()=>{
+            const textareaContent = document.querySelector('#textarea').value;
+            jump(textareaContent);
+        });
+        
+        const bodyDom = document.querySelector('body');
+        for(const {key, name, link, action} of buttonsConfig){
+          const btnDom = document.createElement('button');
+          btnDom.id = key ?? name;
+          btnDom.innerHTML = name;
+          const _action = action ?? (link && (()=>jump(link)));
+          btnDom.addEventListener('click', _action);
+          bodyDom.appendChild(btnDom);
+        }
+
+        const searchParams = new URL(location.href).searchParams;
+        const autoClickKey = searchParams.get('autoClickKey');
+        const autoClickDelay = Number(searchParams.get('autoClickDelay')) ?? 0;
+        if(autoClickKey){
+            setTimeout(()=>{
+                document.querySelector(`#${autoClickKey}`)?.click?.();
+            }, autoClickDelay);
+        }
+    </script>
+</body>
+
+</html
