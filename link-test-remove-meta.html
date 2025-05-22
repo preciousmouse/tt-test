@@ -44,16 +44,19 @@
         const M_onelink_template = `https://snssdk1233.onelink.me/bIdt?${onelink_param_str}`;
         const T_onelink_template = `https://snssdk1180.onelink.me/BAuo?${onelink_param_str}`;
         const Lite_onelink_template = `https://snssdk1340.onelink.me/k3Nj?${onelink_param_str}`;
+        const Coin_onelink_template = `https://snssdk473824.onelink.me/4P4E?${onelink_param_str}`;
         function getOnelink({appType, customScheme, with_short, remove_afdp, with_af_android_store_csl}) {
             const onelink_template = {
                 m: M_onelink_template,
                 t: T_onelink_template,
                 lite: Lite_onelink_template,
+                coin: Coin_onelink_template,
             }[appType];
             const fillScheme = customScheme ?? {
                 m: M_scheme,
                 t: T_scheme,
                 lite: Lite_scheme,
+                coin: Coin_scheme,
             }[appType];
 
             const onelink = new URL(onelink_template);
@@ -150,6 +153,12 @@
                     setTimeout(()=>{
                         jump(getOnelink({appType: 'm'}));
                     },50);
+                },50);
+            }},
+            {key: 'coin_scheme_and_coin_onelink', name: 'Coin scheme + Coin Onelink', action: ()=>{
+                jump(Coin_scheme);
+                setTimeout(()=>{
+                    jump(getOnelink({appType: 'coin'}));
                 },50);
             }},
 
