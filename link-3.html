@@ -57,6 +57,7 @@
 <body>
     <textarea id="textarea" style="width:100%" placeholder="please input url"></textarea>
     <button id="textarea-btn">open url from textarea</button>
+    <button id="test-getInstalledRelatedApps-btn">test navigator.getInstalledRelatedApps support</button>
 
     <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
     <script>
@@ -64,6 +65,18 @@
         var vConsole = new window.VConsole();
     </script>
     <script>
+        async function testGetInstalledRelatedAppsApiSupport() {
+            const isSupport = navigator.getInstalledRelatedApps;
+            if (isSupport) {
+                const result = await navigator.getInstalledRelatedApps();
+                console.log('getInstalledRelatedApps result', result);
+                alert('getInstalledRelatedApps result', JSON.stringify(result));
+            }else{
+                console.error('not support getInstalledRelatedApps api');
+                alert('not support getInstalledRelatedApps api');
+            }
+        }
+
 
         const scheme_param_str = 'refer=web&gd_label=click_wap_login_popup&page_name=reflow_graphic&params_url=https%3A%2F%2Fwww.tiktok.com%2F%40puffo.il.gatto%2Fphoto%2F7374872651497573665%3F_r%3D1%26_t%3D8rbRC1WENSN%26lang%3Den%26mockRam%3D3%26target%3Dlogin_popup%26rid%3D20838449535029629590%26vidab%3D73229290%252C70508271%252C72783097%252C72923695%252C73125895%252C73153475%252C73167672%252C73205493%252C73234258%252C72891515%252C73004916%26click_item_id%3D7374872651497573665&_r=1&lang=en&mockRam=3&_d=secCgYIASAHKAESPgo8vDQEektRaYITfHjCQ6ucZed7J5yN%2Fh57NiHU3u6sjXHZxxA%2BpdFCtibnfn5P1MTjQDr6%2FSwsmDMz88psGgA%3D&checksum=3b275841ec98d1813d873dbf194a4c17e4461c74a246d9e78e351384fd45e4cc&link_reflow_popup_iteration_sharer=%7B%22follow_to_play_duration%22%3A-1%2C%22profile_clickable%22%3A1%2C%22dynamic_cover%22%3A1%2C%22click_empty_to_play%22%3A1%7D&preview_pb=0&sec_user_id=MS4wLjABAAAAhdt-6x8jd0kxuwws25v2wuHFkORK1NA6HKGl2UlZSPz-JABb-8JOkOlMeK8ZGsNB&share_app_id=1233&share_item_id=7415227144336411909&share_link_id=C2CBE046-C385-4CD9-86FB-04398D4DDA9A&sharer_language=zh&social_share_type=0&source=h5_m&timestamp=1732268469&tt_from=copy&u_code=e7357bfmi6i15a&ug_btm=b8727%2Cb2001&user_id=7212990523900888110&utm_campaign=client_share&utm_medium=ios&utm_source=copy&referer=pwa&wid=7451585720806884872&vidab=73229290%2C70508271%2C72783097%2C72923695%2C73125895%2C73153475%2C73167672%2C73205493%2C73234258%2C72891515%2C73004916&seo_vidab=&smartui_instance_id=7445217363210797057%2C7439152838858506256%2C7439151652231217168%2C7272209506837217281&release=1.0.0.6904&jump_time=1735032171743&is_sub_only_video=0&ug_source=&ug_campaign=&tt_ug_share_gp_flag=1';
         const M_scheme = `snssdk1233://aweme/detail/7374872651497573665?${scheme_param_str}`;
@@ -221,6 +234,10 @@
         document.querySelector('#textarea-btn').addEventListener('click',()=>{
             const textareaContent = document.querySelector('#textarea').value;
             jump(textareaContent);
+        });
+
+        document.querySelector('#textarea-btn').addEventListener('click',()=>{
+            testGetInstalledRelatedAppsApiSupport();
         });
         
         const bodyDom = document.querySelector('body');
