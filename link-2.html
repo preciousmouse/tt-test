@@ -174,6 +174,12 @@
                     jump(Lite_scheme);
                 },50);
             }},
+            {key: 'm_scheme_and_m_onelink', name: 'M scheme + M Onelink', action: ()=>{
+                jump(M_scheme);
+                setTimeout(()=>{
+                    jump(getOnelink({appType: 'm'}));
+                },50);
+            }},
             {key: 'm_and_lite_scheme_and_m_onelink', name: 'M + Lite scheme + M Onelink', action: ()=>{
                 jump(M_scheme);
                 setTimeout(()=>{
