@@ -71,20 +71,36 @@
         const Lite_scheme = `snssdk1340://aweme/detail/7374872651497573665?${scheme_param_str}`;
         const Coin_scheme = `snssdk473824://aweme/detail/7374872651497573665?${scheme_param_str}`;
 
+        const M_Otl_scheme = `snssdkotl1233://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const M_M2_scheme = `snssdkm21233://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const M_LiteM2_scheme = `snssdklitem21233://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const M2_Otl_scheme = `snssdkotl259://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const M2_LiteM2_scheme = `snssdk259://aweme/detail/7374872651497573665?${scheme_param_str}`;
+        const LiteM2_Otl_scheme = `snssdk662155://aweme/detail/7374872651497573665?${scheme_param_str}`;            
+
         const onelink_param_str = 'pid=tiktok_share&c=graphic_7374872651497573665&af_adset_id=7212990523900888110_copy&click=0&tap_target=login_popup&_d=secCgYIASAHKAESPgo8vDQEektRaYITfHjCQ6ucZed7J5yN%2Fh57NiHU3u6sjXHZxxA%2BpdFCtibnfn5P1MTjQDr6%2FSwsmDMz88psGgA%3D&embed_source=&ug_source=&ug_campaign=&wid=7451585720806884872&rid=20838449535029629590&vid=&vidab=73229290%2C70508271%2C72783097%2C72923695%2C73125895%2C73153475%2C73167672%2C73205493%2C73234258%2C72891515%2C73004916&seo_vidab=&smartui_instance_id=7445217363210797057%2C7439152838858506256%2C7439151652231217168%2C7272209506837217281&release=1.0.0.6904&lvid=&jump_time=1735032171743&af_adset=pwa&af_ad_id=no_referrer&tt_ug_share_gp_flag=1&af_dp=';
         const M_onelink_template = `https://snssdk1233.onelink.me/bIdt?${onelink_param_str}`;
         const T_onelink_template = `https://snssdk1180.onelink.me/BAuo?${onelink_param_str}`;
         const Lite_onelink_template = `https://snssdk1340.onelink.me/k3Nj?${onelink_param_str}`;
+        // M2 onelink 还没申请下来
+
         function getOnelink({appType, customScheme, with_short, remove_afdp, with_af_android_store_csl}) {
             const onelink_template = {
                 m: M_onelink_template,
                 t: T_onelink_template,
                 lite: Lite_onelink_template,
-            }[appType];
+            }[appType] ?? M_onelink_template;
             const fillScheme = customScheme ?? {
                 m: M_scheme,
                 t: T_scheme,
                 lite: Lite_scheme,
+                m_otl: M_Otl_scheme,
+                m_m2: M_M2_scheme,
+                m_litem2: M_LiteM2_scheme,
+                m2_otl: M2_Otl_scheme,
+                m2_litem2: M2_LiteM2_scheme,
+                litem2: Lite_scheme,
+                litem2_otl: LiteM2_Otl_scheme,
             }[appType];
 
             const onelink = new URL(onelink_template);
@@ -103,16 +119,39 @@
         const M_applink_template = 'https://app-va.tiktokv.com/redirect/?redirect_url=&short_dl=&decode_once=1';
         const T_applink_template = 'https://www.tiktokv.com/redirect/?redirect_url=&short_dl=&decode_once=1';
         const Lite_applink_template = 'https://www.tiktokv.com/redirect/?redirect_url=&short_dl=&decode_once=1';
+
+        const M_Otl_applink_template = 'https://www.tiktokv.com/m_otl_redirect/?redirect_url=&short_dl=&decode_once=1';
+        const M_M2_applink_template = 'https://www.tiktokv.com/m_m2_redirect/?redirect_url=&short_dl=&decode_once=1';
+        const M_LiteM2_applink_template = 'https://www.tiktokv.com/m_litem2_redirect/?redirect_url=&short_dl=&decode_once=1';
+        const M2_Otl_applink_template = 'https://www.tiktokv.com/m2_otl_redirect/?redirect_url=&short_dl=&decode_once=1';
+        const M2_LiteM2_applink_template = 'https://www.tiktokv.com/m2_redirect/?redirect_url=&short_dl=&decode_once=1';
+        const LiteM2_applink_template = 'https://www.tiktokv.com/litem2_redirect/?redirect_url=&short_dl=&decode_once=1';
+        const LiteM2_Otl_applink_template = 'https://www.tiktokv.com/litem2_otl_redirect/?redirect_url=&short_dl=&decode_once=1';
+
         function getApplink({appType, customOnelink, customScheme}){
             const applink_template = {
                 m: M_applink_template,
                 t: T_applink_template,
                 lite: Lite_applink_template,
+                m_otl: M_Otl_applink_template,
+                m_m2: M_M2_applink_template,
+                m_litem2: M_LiteM2_applink_template,
+                m2_otl: M2_Otl_applink_template,
+                m2_litem2: M2_LiteM2_applink_template,
+                litem2: LiteM2_applink_template,
+                litem2_otl: LiteM2_Otl_applink_template,
             }[appType];
             const fillScheme = customScheme ?? {
                 m: M_scheme,
                 t: T_scheme,
                 lite: Lite_scheme,
+                m_otl: M_Otl_scheme,
+                m_m2: M_M2_scheme,
+                m_litem2: M_LiteM2_scheme,
+                m2_otl: M2_Otl_scheme,
+                m2_litem2: M2_LiteM2_scheme,
+                litem2: Lite_scheme,
+                litem2_otl: LiteM2_Otl_scheme,
             }[appType];
             const fillOnelink = customOnelink ?? getOnelink({appType, with_short: true });
 
@@ -191,6 +230,28 @@
             }},
 
             {key: 'lite_mini_apk', name: 'Lite mini apk download', link: Lite_mini_apk_link },
+
+            { name: '⬇️ M2 links ⬇️' },
+            {key: 'm_otl_scheme', name: 'M OTL scheme', link: M_Otl_scheme },
+            {key: 'm_otl_applink', name: 'M OTL applink', link: getApplink({appType: 'm_otl'}) },
+
+            {key: 'm_m2_scheme', name: 'M M2 scheme', link: M_M2_scheme },
+            {key: 'm_m2_applink', name: 'M M2 applink', link: getApplink({appType: 'm_m2'}) },
+
+            {key: 'm_litem2_scheme', name: 'M LiteM2 scheme', link: M_LiteM2_scheme },
+            {key: 'm_litem2_applink', name: 'M LiteM2 applink', link: getApplink({appType: 'm_litem2'}) },
+
+            {key: 'm2_otl_scheme', name: 'M2 OTL scheme', link: M2_Otl_scheme },
+            {key: 'm2_otl_applink', name: 'M2 OTL applink', link: getApplink({appType: 'm2_otl'}) },
+
+            {key: 'm2_litem2_scheme', name: 'M2 LiteM2 scheme', link: M2_LiteM2_scheme },
+            {key: 'm2_litem2_applink', name: 'M2 LiteM2 applink', link: getApplink({appType: 'm2_litem2'}) },
+
+            {key: 'litem2_scheme', name: 'LiteM2 scheme', link: Lite_scheme },
+            {key: 'litem2_applink', name: 'LiteM2 applink', link: getApplink({appType: 'litem2'}) },
+
+            {key: 'litem2_otl_scheme', name: 'LiteM2 OTL scheme', link: LiteM2_Otl_scheme },
+            {key: 'litem2_otl_applink', name: 'LiteM2 OTL applink', link: getApplink({appType: 'litem2_otl'}) },
         ];
 
 
