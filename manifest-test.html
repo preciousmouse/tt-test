@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>manifest test</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        label,
+        select,
+        button,
+        p,
+        pre {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        select,
+        button {
+            height: 30px;
+            margin: 10px 0;
+        }
+
+        pre {
+            margin: 10px 0 0;
+            padding: 10px;
+            background: #f5f5f5;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        #current-href {
+            margin: 0;
+            font-size: 14px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <label for="version-select">manifest 版本：</label>
+    <select id="version-select">
+        <option value="1">v=1</option>
+        <option value="2">v=2</option>
+        <option value="3">v=3</option>
+        <option value="4">v=4</option>
+        <option value="5">v=5</option>
+    </select>
+    <p id="current-href"></p>
+    <button id="test-btn">getInstalledRelatedApps</button>
+    <pre id="result"></pre>
+
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+    <script>
+        var vConsole = new window.VConsole();
+    </script>
+    <script>
+        const manifestLink = document.querySelector('link[rel="manifest"]');
+        const versionSelect = document.getElementById('version-select');
+        const currentHrefEl = document.getElementById('current-href');
+        const resultEl = document.getElementById('result');
+        const testBtn = document.getElementById('test-btn');
+
+        function getManifestHref(version) {
+            return `/manifest.json?v=${version}`;
+        }
+
+        function getVersionFromUrl() {
+            const v = new URL(location.href).searchParams.get('v');
+            return v || '1';
+        }
+
+        function syncManifestVersion(version) {
+            const href = getManifestHref(version);
+            manifestLink.href = href;
+            versionSelect.value = version;
+            currentHrefEl.textContent = `当前 manifest href: ${href}`;
+        }
+
+        function printResult(message) {
+            resultEl.textContent = message;
+        }
+
+        async function testGetInstalledRelatedApps() {
+            if (!navigator.getInstalledRelatedApps) {
+                const message = 'not support getInstalledRelatedApps api';
+                console.error(message);
+                printResult(message);
+                return;
+            }
+
+            try {
+                const result = await navigator.getInstalledRelatedApps();
+                const message = JSON.stringify(result, null, 2);
+                console.log('getInstalledRelatedApps result', result);
+                printResult(message);
+            } catch (error) {
+                const message = `getInstalledRelatedApps error: ${error}`;
+                console.error(message, error);
+                printResult(message);
+            }
+        }
+
+        syncManifestVersion(getVersionFromUrl());
+
+        versionSelect.addEventListener('change', () => {
+            const url = new URL(location.href);
+            url.searchParams.set('v', versionSelect.value);
+            location.href = url.toString();
+        });
+
+        testBtn.addEventListener('click', () => {
+            testGetInstalledRelatedApps();
+        });
+    </script>
+</body>
+
+</html>
