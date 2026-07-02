@@ -38,7 +38,7 @@
             if (isSupport) {
                 const result = await navigator.getInstalledRelatedApps();
                 console.log('getInstalledRelatedApps result', result);
-                alert('getInstalledRelatedApps result', JSON.stringify(result));
+                alert(`getInstalledRelatedApps result ${JSON.stringify(result)}`);
             }else{
                 console.error('not support getInstalledRelatedApps api');
                 alert('not support getInstalledRelatedApps api');
