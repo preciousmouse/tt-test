@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" />
+    <title>json-logic test</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            box-sizing: border-box;
+            padding: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        label,
+        textarea,
+        button,
+        p,
+        pre {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            margin: 6px 0 10px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        button {
+            height: 36px;
+            margin: 6px 0 10px;
+        }
+
+        pre {
+            margin: 10px 0 0;
+            padding: 10px;
+            background: #f5f5f5;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .status {
+            margin: 0 0 10px;
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <p class="status" id="status">正在加载 json-logic-js …</p>
+
+    <label for="rule-input">Rule（支持 JS 字面量：undefined / NaN / 单引号 / 尾逗号 等）:</label>
+    <textarea id="rule-input">{ "==": [{ "var": "a" }, 1] }</textarea>
+
+    <label for="data-input">Data（支持 JS 字面量，可留空表示 undefined）:</label>
+    <textarea id="data-input">{ a: undefined }</textarea>
+
+    <button id="run-btn" disabled>jsonLogic.apply(rule, data)</button>
+    <pre id="result"></pre>
+
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+    <script>
+        var vConsole = new window.VConsole();
+    </script>
+
+    <script type="module">
+        // json-logic-js 通过 ESM CDN 引入。RulesLogic 为 TypeScript 类型，运行时无导出，仅默认导出可用。
+        import jsonLogic from 'https://esm.sh/json-logic-js@2.0.5';
+
+        // 挂载到 window，方便在控制台直接调用：window.jsonLogic.apply(rule, data)
+        window.jsonLogic = jsonLogic;
+
+        const statusEl = document.getElementById('status');
+        const ruleInput = document.getElementById('rule-input');
+        const dataInput = document.getElementById('data-input');
+        const runBtn = document.getElementById('run-btn');
+        const resultEl = document.getElementById('result');
+
+        statusEl.textContent = 'json-logic-js 已加载，可在控制台使用 window.jsonLogic';
+        runBtn.disabled = false;
+        console.log('jsonLogic mounted on window', jsonLogic);
+
+        function printResult(message) {
+            resultEl.textContent = message;
+        }
+
+        // 用 JS 表达式求值代替 JSON.parse，从而支持 undefined、NaN、单引号、尾逗号、
+        // 注释等「JS 合法但 JSON 非法」的写法，便于验证边界场景。
+        // 空输入按 undefined 处理。
+        function parseJsValue(raw, label) {
+            const text = raw.trim();
+            if (!text) return undefined;
+            try {
+                // 用 () 包裹，避免以 { 开头时被当作代码块而非对象字面量。
+                return new Function('return (' + text + '\n);')();
+            } catch (error) {
+                throw new Error(`${label} 解析失败: ${error.message}`);
+            }
+        }
+
+        // 结果可能是 undefined / NaN / 函数等 JSON 无法表达的值，做兜底展示。
+        function formatResult(value) {
+            if (value === undefined) return 'undefined';
+            if (typeof value === 'function') return String(value);
+            if (typeof value === 'number' && !Number.isFinite(value)) return String(value);
+            try {
+                const json = JSON.stringify(value, (k, v) => {
+                    if (typeof v === 'undefined') return '__undefined__';
+                    if (typeof v === 'function') return `__fn:${v.name || 'anonymous'}__`;
+                    if (typeof v === 'number' && !Number.isFinite(v)) return `__${String(v)}__`;
+                    return v;
+                }, 2);
+                if (json === undefined) return String(value);
+                return json
+                    .replace(/"__undefined__"/g, 'undefined')
+                    .replace(/"__(NaN|Infinity|-Infinity)__"/g, '$1')
+                    .replace(/"__fn:(.*?)__"/g, 'ƒ $1()');
+            } catch (error) {
+                return String(value);
+            }
+        }
+
+        function run() {
+            try {
+                const rule = parseJsValue(ruleInput.value, 'Rule');
+                const data = parseJsValue(dataInput.value, 'Data');
+                const result = jsonLogic.apply(rule, data);
+                const message = formatResult(result);
+                console.log('jsonLogic.apply result', result);
+                printResult(message);
+            } catch (error) {
+                const message = `error: ${error.message || error}`;
+                console.error(message, error);
+                printResult(message);
+            }
+        }
+
+        runBtn.addEventListener('click', run);
+        run();
+    </script>
+</body>
+
+</html>
