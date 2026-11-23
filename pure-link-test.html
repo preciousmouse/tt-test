@@ -19,10 +19,102 @@
             height: 30px;
             margin: 10px;
         }
+
+        .domain-switch-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            padding: 8px 12px;
+            margin: 6px 0 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            background: #f7f8fa;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .domain-switch-label {
+            display: flex;
+            align-items: center;
+        }
+
+        .domain-badge {
+            margin-left: 6px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: 600;
+            background: #e6f4ff;
+            color: #1677ff;
+        }
+
+        .domain-badge.alt {
+            background: #fff1f0;
+            color: #cf1322;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            transition: 0.2s;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .switch input:checked + .slider {
+            background-color: #fe2c55;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(20px);
+        }
     </style>
 </head>
 
 <body>
+    <label class="domain-switch-bar" for="onelink-domain-switch">
+        <span class="domain-switch-label">
+            <span>OneLink Domain:</span>
+            <span id="onelink-domain-text" class="domain-badge">onelink.me</span>
+        </span>
+        <span class="switch">
+            <input type="checkbox" id="onelink-domain-switch" />
+            <span class="slider"></span>
+        </span>
+    </label>
     <textarea id="textarea" style="width:100%" placeholder="please input url"></textarea>
     <button id="textarea-btn">open url from textarea</button>
     <button id="test-getInstalledRelatedApps-btn">test navigator.getInstalledRelatedApps support</button>
@@ -63,6 +155,28 @@
         const M2_LiteM2_scheme = `snssdk259://aweme/detail/7374872651497573665?${scheme_param_str}`;
         const LiteM2_Otl_scheme = `snssdk662155://aweme/detail/7374872651497573665?${scheme_param_str}`;    
 
+        const DEFAULT_ONELINK_DOMAIN = 'onelink.me';
+        const ALT_ONELINK_DOMAIN = 'onelnk.com';
+        let currentOnelinkDomain = DEFAULT_ONELINK_DOMAIN;
+
+        const domainSwitchEl = document.querySelector('#onelink-domain-switch');
+        const domainTextEl = document.querySelector('#onelink-domain-text');
+        function syncOnelinkDomain(useAlt, logChange = false) {
+            currentOnelinkDomain = useAlt ? ALT_ONELINK_DOMAIN : DEFAULT_ONELINK_DOMAIN;
+            domainTextEl.textContent = currentOnelinkDomain;
+            domainTextEl.classList.toggle('alt', useAlt);
+            if (logChange) {
+                console.log('onelink domain switched to:', currentOnelinkDomain);
+            }
+        }
+        domainSwitchEl.addEventListener('change', (e) => {
+            syncOnelinkDomain(e.target.checked, true);
+        });
+        window.addEventListener('pageshow', () => {
+            syncOnelinkDomain(domainSwitchEl.checked);
+        });
+        syncOnelinkDomain(domainSwitchEl.checked);
+
         const onelink_param_str = 'pid=tiktok_share&c=graphic_7374872651497573665&af_adset_id=7212990523900888110_copy&click=0&tap_target=login_popup&_d=secCgYIASAHKAESPgo8vDQEektRaYITfHjCQ6ucZed7J5yN%2Fh57NiHU3u6sjXHZxxA%2BpdFCtibnfn5P1MTjQDr6%2FSwsmDMz88psGgA%3D&embed_source=&ug_source=&ug_campaign=&wid=7451585720806884872&rid=20838449535029629590&vid=&vidab=73229290%2C70508271%2C72783097%2C72923695%2C73125895%2C73153475%2C73167672%2C73205493%2C73234258%2C72891515%2C73004916&seo_vidab=&smartui_instance_id=7445217363210797057%2C7439152838858506256%2C7439151652231217168%2C7272209506837217281&release=1.0.0.6904&lvid=&jump_time=1735032171743&af_adset=pwa&af_ad_id=no_referrer&tt_ug_share_gp_flag=1&af_dp=';
         const M_onelink_template = `https://snssdk1233.onelink.me/bIdt?${onelink_param_str}`;
         const T_onelink_template = `https://snssdk1180.onelink.me/BAuo?${onelink_param_str}`;
@@ -95,6 +209,7 @@
             }[appType];
 
             const onelink = new URL(onelink_template);
+            onelink.hostname = onelink.hostname.replace(/\.onelink\.me$/, `.${currentOnelinkDomain}`);
             if(!with_short && onelink.searchParams.has('af_dp') && onelink.searchParams.get('af_dp') === ''){
                 onelink.searchParams.set('af_dp', fillScheme);
             }
@@ -169,47 +284,47 @@
             {key: 'coin_scheme', name: 'Coin scheme', link: Coin_scheme },
             {key: 'pro_scheme', name: 'Pro scheme', link: Pro_scheme },
 
-            {key: 't_onelink', name: 'T onelink', link: getOnelink({appType: 't'}) },
-            {key: 'm_onelink', name: 'M onelink', link: getOnelink({appType: 'm'}) },
-            {key: 'lite_onelink', name: 'Lite onelink', link: getOnelink({appType: 'lite'}) },
-            {key: 'coin_onelink', name: 'Coin onelink', link: getOnelink({appType: 'coin'}) },
-            {key: 'pro_onelink', name: 'Pro onelink', link: getOnelink({appType: 'pro'}) },
+            {key: 't_onelink', name: 'T onelink', link: () => getOnelink({appType: 't'}) },
+            {key: 'm_onelink', name: 'M onelink', link: () => getOnelink({appType: 'm'}) },
+            {key: 'lite_onelink', name: 'Lite onelink', link: () => getOnelink({appType: 'lite'}) },
+            {key: 'coin_onelink', name: 'Coin onelink', link: () => getOnelink({appType: 'coin'}) },
+            {key: 'pro_onelink', name: 'Pro onelink', link: () => getOnelink({appType: 'pro'}) },
 
-            {key: 't_onelink_noafdp', name: 'T onelink without af_dp', link: getOnelink({appType: 't', remove_afdp: true}) },
-            {key: 'm_onelink_noafdp', name: 'M onelink without af_dp', link: getOnelink({appType: 'm', remove_afdp: true}) },
-            {key: 'lite_onelink_noafdp', name: 'Lite onelink without af_dp', link: getOnelink({appType: 'lite', remove_afdp: true}) },
-            {key: 'coin_onelink_noafdp', name: 'Coin onelink without af_dp', link: getOnelink({appType: 'coin', remove_afdp: true}) },
-            {key: 'pro_onelink_noafdp', name: 'Pro onelink without af_dp', link: getOnelink({appType: 'pro', remove_afdp: true}) },
+            {key: 't_onelink_noafdp', name: 'T onelink without af_dp', link: () => getOnelink({appType: 't', remove_afdp: true}) },
+            {key: 'm_onelink_noafdp', name: 'M onelink without af_dp', link: () => getOnelink({appType: 'm', remove_afdp: true}) },
+            {key: 'lite_onelink_noafdp', name: 'Lite onelink without af_dp', link: () => getOnelink({appType: 'lite', remove_afdp: true}) },
+            {key: 'coin_onelink_noafdp', name: 'Coin onelink without af_dp', link: () => getOnelink({appType: 'coin', remove_afdp: true}) },
+            {key: 'pro_onelink_noafdp', name: 'Pro onelink without af_dp', link: () => getOnelink({appType: 'pro', remove_afdp: true}) },
 
-            {key: 't_onelink_afstorecsl', name: 'T onelink with af_android_store_csl', link: getOnelink({appType: 't', with_af_android_store_csl: true}) },
-            {key: 'm_onelink_afstorecsl', name: 'M onelink with af_android_store_csl', link: getOnelink({appType: 'm', with_af_android_store_csl: true}) },
-            {key: 'lite_onelink_afstorecsl', name: 'Lite onelink with af_android_store_csl', link: getOnelink({appType: 'lite', with_af_android_store_csl: true}) },
-            {key: 'coin_onelink_afstorecsl', name: 'Coin onelink with af_android_store_csl', link: getOnelink({appType: 'coin', with_af_android_store_csl: true}) },
+            {key: 't_onelink_afstorecsl', name: 'T onelink with af_android_store_csl', link: () => getOnelink({appType: 't', with_af_android_store_csl: true}) },
+            {key: 'm_onelink_afstorecsl', name: 'M onelink with af_android_store_csl', link: () => getOnelink({appType: 'm', with_af_android_store_csl: true}) },
+            {key: 'lite_onelink_afstorecsl', name: 'Lite onelink with af_android_store_csl', link: () => getOnelink({appType: 'lite', with_af_android_store_csl: true}) },
+            {key: 'coin_onelink_afstorecsl', name: 'Coin onelink with af_android_store_csl', link: () => getOnelink({appType: 'coin', with_af_android_store_csl: true}) },
 
             {key: 't_onelink_noafdp_afstorecsl', name: 'T onelink with af_android_store_csl + without af_dp', 
-                link: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true}) },
+                link: () => getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true}) },
             {key: 'm_onelink_noafdp_afstorecsl', name: 'M onelink with af_android_store_csl + without af_dp', 
-                link: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true}) },
+                link: () => getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true}) },
             {key: 'lite_onelink_noafdp_afstorecsl', name: 'Lite onelink with af_android_store_csl + without af_dp', 
-                link: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true}) },
+                link: () => getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true}) },
             {key: 'coin_onelink_noafdp_afstorecsl', name: 'Coin onelink with af_android_store_csl + without af_dp', 
-                link: getOnelink({appType: 'coin', with_af_android_store_csl: true, remove_afdp: true}) },
+                link: () => getOnelink({appType: 'coin', with_af_android_store_csl: true, remove_afdp: true}) },
 
-            {key: 't_applink', name: 'T applink', link: getApplink({appType: 't'}) },
-            {key: 'm_applink', name: 'M applink', key: 'm_applink', link: getApplink({appType: 'm'}) },
-            {key: 'lite_applink', name: 'Lite applink', link: getApplink({appType: 'lite'}) },
-            {key: 'coin_applink', name: 'Coin applink', link: getApplink({appType: 'coin'}) },
-            {key: 'pro_applink', name: 'Pro applink', link: getApplink({appType: 'pro'}) },
+            {key: 't_applink', name: 'T applink', link: () => getApplink({appType: 't'}) },
+            {key: 'm_applink', name: 'M applink', key: 'm_applink', link: () => getApplink({appType: 'm'}) },
+            {key: 'lite_applink', name: 'Lite applink', link: () => getApplink({appType: 'lite'}) },
+            {key: 'coin_applink', name: 'Coin applink', link: () => getApplink({appType: 'coin'}) },
+            {key: 'pro_applink', name: 'Pro applink', link: () => getApplink({appType: 'pro'}) },
 
-            {key: 't_applink_afstorecsl', name: 'T applink with af_android_store_csl', link: getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, with_short: true })}) },
-            {key: 'm_applink_afstorecsl', name: 'M applink with af_android_store_csl', key: 'm_applink', link: getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, with_short: true })}) },
-            {key: 'lite_applink_afstorecsl', name: 'Lite applink with af_android_store_csl', link: getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, with_short: true })}) },
-            {key: 'coin_applink_afstorecsl', name: 'Coin applink with af_android_store_csl', link: getApplink({appType: 'coin', customOnelink: getOnelink({appType: 'coin', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 't_applink_afstorecsl', name: 'T applink with af_android_store_csl', link: () => getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 'm_applink_afstorecsl', name: 'M applink with af_android_store_csl', key: 'm_applink', link: () => getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 'lite_applink_afstorecsl', name: 'Lite applink with af_android_store_csl', link: () => getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, with_short: true })}) },
+            {key: 'coin_applink_afstorecsl', name: 'Coin applink with af_android_store_csl', link: () => getApplink({appType: 'coin', customOnelink: getOnelink({appType: 'coin', with_af_android_store_csl: true, with_short: true })}) },
 
-            {key: 't_applink_noafdp_afstorecsl', name: 'T applink with af_android_store_csl + without af_dp', link: getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
-            {key: 'm_applink_noafdp_afstorecsl', name: 'M applink with af_android_store_csl + without af_dp', key: 'm_applink', link: getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
-            {key: 'lite_applink_noafdp_afstorecsl', name: 'Lite applink with af_android_store_csl + without af_dp', link: getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
-            {key: 'coin_applink_noafdp_afstorecsl', name: 'Coin applink with af_android_store_csl + without af_dp', link: getApplink({appType: 'coin', customOnelink: getOnelink({appType: 'coin', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 't_applink_noafdp_afstorecsl', name: 'T applink with af_android_store_csl + without af_dp', link: () => getApplink({appType: 't', customOnelink: getOnelink({appType: 't', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 'm_applink_noafdp_afstorecsl', name: 'M applink with af_android_store_csl + without af_dp', key: 'm_applink', link: () => getApplink({appType: 'm', customOnelink: getOnelink({appType: 'm', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 'lite_applink_noafdp_afstorecsl', name: 'Lite applink with af_android_store_csl + without af_dp', link: () => getApplink({appType: 'lite', customOnelink: getOnelink({appType: 'lite', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
+            {key: 'coin_applink_noafdp_afstorecsl', name: 'Coin applink with af_android_store_csl + without af_dp', link: () => getApplink({appType: 'coin', customOnelink: getOnelink({appType: 'coin', with_af_android_store_csl: true, remove_afdp: true, with_short: true })}) },
 
 
             {key: 'm_and_lite_scheme', name: 'M + Lite scheme', action: ()=>{
@@ -250,28 +365,28 @@
 
             { name: '⬇️ M2 links ⬇️' },
             {key: 'm_otl_scheme', name: 'M OTL scheme', link: M_Otl_scheme },
-            {key: 'm_otl_applink', name: 'M OTL applink', link: getApplink({appType: 'm_otl'}) },
+            {key: 'm_otl_applink', name: 'M OTL applink', link: () => getApplink({appType: 'm_otl'}) },
 
             {key: 'm_m2_scheme', name: 'M M2 scheme', link: M_M2_scheme },
-            {key: 'm_m2_applink', name: 'M M2 applink', link: getApplink({appType: 'm_m2'}) },
+            {key: 'm_m2_applink', name: 'M M2 applink', link: () => getApplink({appType: 'm_m2'}) },
 
             {key: 'm_litem2_scheme', name: 'M LiteM2 scheme', link: M_LiteM2_scheme },
-            {key: 'm_litem2_applink', name: 'M LiteM2 applink', link: getApplink({appType: 'm_litem2'}) },
+            {key: 'm_litem2_applink', name: 'M LiteM2 applink', link: () => getApplink({appType: 'm_litem2'}) },
 
             {key: 'm2_otl_scheme', name: 'M2 OTL scheme', link: M2_Otl_scheme },
-            {key: 'm2_otl_applink', name: 'M2 OTL applink', link: getApplink({appType: 'm2_otl'}) },
+            {key: 'm2_otl_applink', name: 'M2 OTL applink', link: () => getApplink({appType: 'm2_otl'}) },
 
             {key: 'm2_litem2_scheme', name: 'M2 LiteM2 scheme', link: M2_LiteM2_scheme },
-            {key: 'm2_litem2_applink', name: 'M2 LiteM2 applink', link: getApplink({appType: 'm2_litem2'}) },
+            {key: 'm2_litem2_applink', name: 'M2 LiteM2 applink', link: () => getApplink({appType: 'm2_litem2'}) },
 
             {key: 'litem2_scheme', name: 'LiteM2 scheme', link: Lite_scheme },
-            {key: 'litem2_applink', name: 'LiteM2 applink', link: getApplink({appType: 'litem2'}) },
+            {key: 'litem2_applink', name: 'LiteM2 applink', link: () => getApplink({appType: 'litem2'}) },
 
             {key: 'litem2_otl_scheme', name: 'LiteM2 OTL scheme', link: LiteM2_Otl_scheme },
-            {key: 'litem2_otl_applink', name: 'LiteM2 OTL applink', link: getApplink({appType: 'litem2_otl'}) },
+            {key: 'litem2_otl_applink', name: 'LiteM2 OTL applink', link: () => getApplink({appType: 'litem2_otl'}) },
 
-            {key: 'm_scheme_with_lite_onelink', name: 'M scheme with Lite Onelink', link: getOnelink({appType: 'lite', customScheme: M_scheme}) },
-            {key: 'm_scheme_with_lite_onelink with af_android_store_csl', name: 'M scheme with Lite Onelink With af_android_store_csl', link: getOnelink({appType: 'lite', customScheme: M_scheme, with_af_android_store_csl: true}) },
+            {key: 'm_scheme_with_lite_onelink', name: 'M scheme with Lite Onelink', link: () => getOnelink({appType: 'lite', customScheme: M_scheme}) },
+            {key: 'm_scheme_with_lite_onelink with af_android_store_csl', name: 'M scheme with Lite Onelink With af_android_store_csl', link: () => getOnelink({appType: 'lite', customScheme: M_scheme, with_af_android_store_csl: true}) },
         ];
 
 
@@ -299,7 +414,7 @@
           const btnDom = document.createElement('button');
           btnDom.id = key ?? name;
           btnDom.innerHTML = name;
-          const _action = action ?? (link && (()=>jump(link)));
+          const _action = action ?? (link && (()=>jump(typeof link === 'function' ? link() : link)));
           btnDom.addEventListener('click', _action);
           bodyDom.appendChild(btnDom);
         }
